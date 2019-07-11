@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{#% load static %#}
+{% block page_content %}
+	<h1>Create Your Form</h1>
+	<form method="POST">
+		{% csrf_token %}
+		{{ formset.as_p }}
+		<button type="submit">Save Form</button>
+	</form>
+{% endblock page_content %}
