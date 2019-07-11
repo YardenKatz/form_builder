@@ -9,39 +9,43 @@
     <!-- Bootstrap CSS -->
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
-    <title>Hello, world!</title>
+    <title>
+		{% block title %}
+			Hello, world!
+		{% endblock title %}
+	</title>
   </head>
   <body>
     <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="/">form_builder</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+		<nav class="navbar navbar-expand-lg navbar-light bg-light">
+			<a class="navbar-brand" href="/">form_builder</a>
+			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
-      </li>
-  </div>
-</nav>
+			<div class="collapse navbar-collapse" id="navbarSupportedContent">
+				<ul class="navbar-nav mr-auto">
+				<li class="nav-item active">
+					<a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+				</li>
+			</div>
+		</nav>
     </header>
     <div class="container">
     {% block content %}
 
       <div class="card">
         <div class="card-header">
-        <h1>All collections</h1>
-        <a class="btn btn-outline-primary" href="{% url 'mycollections:collection_create' %}" role="button">Create new collection</a>
+			<h1>All collections</h1>
+			<a class="btn btn-outline-primary" href="{% url 'mycollections:collection_create' %}" role="button">Create new collection</a>
         </div>
         <div class="card-body">
           {% if collections %}
-          {% for object in collections %}
-            <li>
-                <a href="{% url 'mycollections:collection_detail' pk=object.pk %}">Collection ID {{ object }}</a>
-            </li>
-          {% endfor %}
+			{% for object in collections %}
+				<li>
+					<a href="{% url 'mycollections:collection_detail' pk=object.pk %}">Collection ID {{ object }}</a>
+				</li>
+			{% endfor %}
           {% else %}
             <p>No collections</p>
           {% endif %}
