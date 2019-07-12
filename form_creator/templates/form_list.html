@@ -1,17 +1,37 @@
 {% extends 'base.html' %}
 
-
 {% block title %}
 	form_list
 {% endblock title %}
 	
+
 {% block content %}
-	
-	{% for each in form_list  %}
-		{{ each.id }}
-		{{ each.name }}
-		{{ each.submissions }}
-	{% endfor %}
+	<!-- <table class="col-md-9" style="margin-left: 10px;"> -->
+	<br>
+	<h1 align="center">Form List</h1>
+	<br>
+	<table>
+		<!-- <tr class="{% cycle 'row1' 'row2' %} formset_row-{{ formset.prefix }}"> -->
+			
+			{% if form_list %}
+				<tr>
+					<th>Form Id</th>
+					<th>Form Name</th>
+					<th># Submissions</th>
+					<th>Submit Page</th>
+					<th>Submissions Page</th>
+				</tr>	
+				{% for each in form_list  %}
+				<tr>
+					<td></td>
+					<td>{{ each.name }}</td>
+					<td>{{ each.submissions }}</td>
+				</tr>
+				{% endfor %}
+			{% else %}
+				<h5>There are no forms yet...</h5>
+			{% endif %}
+	</table>
 		
 {% endblock content %}
 	
