@@ -8,46 +8,44 @@ from django.db import transaction
 from django.forms import modelformset_factory, inlineformset_factory # TODO: remove unnecesary 
 from django.http import HttpResponse #TODO: delete
 
-def index(request, form_id):
-	userform = UserForm.objects.get(pk=id)#(pk=form_id)
-	# FieldFormset = modelformset_factory(FormField, fields=(
-		# 'label', 
-		# 'input_name',
-		# 'data_type',
-		# ))
-	FieldFormset = inlineformset_factory(UserForm, FormField, extra=1, fields=(
-		'label','input_name','data_type',))
+# def index(request, form_id):
+# 	userform = UserForm.objects.get(pk=id)#(pk=form_id)
+# 	# FieldFormset = modelformset_factory(FormField, fields=(
+# 		# 'label', 
+# 		# 'input_name',
+# 		# 'data_type',
+# 		# ))
+# 	FieldFormset = inlineformset_factory(UserForm, FormField, extra=1, fields=(
+# 		'label','input_name','data_type',))
 
-	if request.method == 'POST':
-		# formset = FieldFormset(request.POST, queryset=FormField.objects.filter(form_id=userform))	
-		formset = FieldFormset(request.POST, instance=userform)
-		if formset.is_valid():
-			formset.save()
-			# instances = formset.save(commit=False)
-			# for instance in instances:
-			# 	instance.form_id = userform
-			# 	instance.save()
+# 	if request.method == 'POST':
+# 		# formset = FieldFormset(request.POST, queryset=FormField.objects.filter(form_id=userform))	
+# 		formset = FieldFormset(request.POST, instance=userform)
+# 		if formset.is_valid():
+# 			formset.save()
+# 			# instances = formset.save(commit=False)
+# 			# for instance in instances:
+# 			# 	instance.form_id = userform
+# 			# 	instance.save()
 
-			return redirect('index', form_id=userform.id)
+# 			return redirect('index', form_id=userform.id)
 
-	# formset = FieldFormset(queryset=FormField.objects.filter(form_id=userform))
-	formset = FieldFormset(instance=userform)
+# 	# formset = FieldFormset(queryset=FormField.objects.filter(form_id=userform))
+# 	formset = FieldFormset(instance=userform)
 
-	return render(request, 'index.html', {'formset': formset})
-
-
-def sample(request):
-	return HttpResponse('Index View...')
+# 	return render(request, 'index.html', {'formset': formset})
 
 
-def formSubmitConfirm(request):
-	return HttpResponse('Your Form Was Submitted Succesfully')
+# def sample(request):
+# 	return HttpResponse('Index View...')
+
+
+# def formSubmitConfirm(request):
+# 	return HttpResponse('Your Form Was Submitted Succesfully')
 
 
 class FormListView(ListView):
-	#model = FormList
 	context_object_name = 'form_list'
-	# queryset = FormList.objects.all()
 	queryset = UserForm.objects.all()
 	template_name = 'form_list.html'
 
@@ -77,8 +75,26 @@ class UserFormCreate(CreateView):
 		return super(UserFormCreate, self).form_valid(form)
 
 	def get_success_url(self):
-		# return reverse_lazy(TODO: 'form_detail', kwargs={'pk': self.object.pk})
-		return  reverse_lazy(formSubmitConfirm)
+		return reverse_lazy('form_list')
+
+
+def formSubmit(request, form_id):
+	userform = UserForm.objects.get(pk=form_id)
+	context = {
+		'name': userform.name,
+	}
+
+	return render(request, 'form_submit.html', context)
+
+
+def formSubmissions(request, form_id):
+	userform = UserForm.objects.get(pk=form_id)
+	context = {
+		'name': userform.name,
+	}
+
+	return render(request, 'form_submissions.html', context)
+
 
 
 

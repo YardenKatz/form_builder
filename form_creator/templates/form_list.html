@@ -10,6 +10,7 @@
 	<br>
 	<h1 align="center">Form List</h1>
 	<br>
+	{% include '_table_counter.html' %}
 	<table>
 		<!-- <tr class="{% cycle 'row1' 'row2' %} formset_row-{{ formset.prefix }}"> -->
 			
@@ -26,12 +27,25 @@
 					<td></td>
 					<td>{{ each.name }}</td>
 					<td>{{ each.submissions }}</td>
+					<td>
+						<a href="{% url 'form_submit' form_id=each.pk %}"
+						class="btn btn-primary">
+						 View</a>
+					</td>
+					<td>
+						<a href="{% url 'form_submissions' form_id=each.pk %}"
+						class="btn btn-primary">
+							View</a>
+					</td>
 				</tr>
 				{% endfor %}
 			{% else %}
 				<h5>There are no forms yet...</h5>
 			{% endif %}
 	</table>
+
+	<br>
+	<a href="{% url 'form_create' %}" class="btn btn-primary">+</a>
 		
 {% endblock content %}
 	
