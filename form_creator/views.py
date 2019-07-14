@@ -89,8 +89,15 @@ def formSubmit(request, form_id):
 
 def formSubmissions(request, form_id):
 	userform = UserForm.objects.get(pk=form_id)
+	fields = FormField.objects.filter(form_id=form_id)
+	submissions = Submission.objects.filter(form_id=form_id)
+	submission_id = submissions.aggregate(Max('submission_id')) + 1
+
+	# TODO: call form with arguments
 	context = {
-		'name': userform.name,
+	# 	'userform': userform,
+	# 	'fields': fields,
+	# 	'submissions': submissions,
 	}
 
 	return render(request, 'form_submissions.html', context)

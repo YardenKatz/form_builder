@@ -43,12 +43,20 @@ class FormField(models.Model):
 	label = models.CharField(max_length=30)
 	input_name = models.CharField(max_length=30)
 	data_type = models.CharField(max_length=3, choices=FIELD_TYPES)
-	data = models.TextField(blank=True)
+	# data = models.TextField(blank=True)
 
 	def __str__(self):
 		return self.label
 
-#
+
+class Submission(models.Model):
+	form_id = models.ForeignKey(UserForm, related_name='has_submisssions',
+		on_delete=models.CASCADE)
+	submission_id = models.PositiveIntegerField() 
+	field_id = models.OneToOneField(FormField, on_delete=models.CASCADE)
+	data = models.TextField()
+
+
 #class FormWizard(forms.ModelForm):
 #	class Meta:
 #		model = UserForm

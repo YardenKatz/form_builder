@@ -1,9 +1,11 @@
+from django import forms
 from django.forms import ModelForm
 from django.forms.models import inlineformset_factory
+from django.db.models import Max
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, Div, HTML, ButtonHolder, Submit
 from .custom_layout_object import *
-from .models import UserForm, FormField
+from .models import UserForm, FormField, Submission
 
 
 class FormFieldsForm(ModelForm):
@@ -41,3 +43,68 @@ class UserFormForm(ModelForm):
                 )
             )
 
+class SubmissionForm(ModelForm):
+
+	class Meta:
+		model = Submission
+		fields = ['data']
+	
+	def __init__(self, *args, **kwargs):
+		form_id = kwargs.pop('form_id')
+		# submissions = kwargs.pop('submissions')
+		submission_id = kwargs.pop('submission_id')
+		super().__init__(*args, **kwargs)
+
+		widgets = {
+			# TODO: for each widget: attrs={
+            # "class": "form-control",
+            # "placeholder": "Your Name"
+        # }
+			'TX': forms.CharField(max_length=100),
+			'EML': forms.EmailField(),
+			'NUM': forms.IntegerField(),
+		}
+		
+		fields = FormField.objects.filter(form_id=form_id)
+		for field in fields:
+			input_name = field.input_name
+			data_type = field.data_type
+			label = field.label
+			self.fields['form_id'] = form_id
+			self.fields['submission_id'] = submission_id
+			# self.fields['field_id'] = field.field_id
+			self.fields[input_name] = widgets.get(data_type)
+			self.fields[input_name].label = label
+			
+			try:
+				self.initial[input_name] = fields[field].data
+			except IndexError:
+				self.initial[input_name] = ''
+
+	def clean(self):
+		# a list of tuples in the form of (input name, data)
+		ret_fields = []
+		fields = FormField.objects.filter(self.form_id)
+		for field in fields:
+			ret_fields.append(
+				(field.input_name, self.cleaned_data[field.input_name])
+				)
+		self.cleaned_data['fields'] = ret_fields
+		
+
+	def save(self):
+		# submission = self.instance
+		# submission.form_id = self.cleaned_data['form_id']
+		# submission.field_id = self.cleaned_data['field_id']
+		# submission.submission_id = self.cleaned_data['submission_id']
+
+		for field in self.cleaned_data['fields']:
+			Submission.objects.create(
+				form_id=self.cleaned_data['form_id'],
+				submission_id=self.cleaned_data['submission_id'],
+				# corresponding to the form of clean().ret_fields
+				field_id=field[0],
+				data=field[1]
+			)
+
+	
