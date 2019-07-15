@@ -148,10 +148,11 @@ class SubmissionsForm(ModelForm):
 	class Meta:
 		model = Submissions
 		exclude = ['user_form']
-		
+
 	def __init__(self, *args, **kwargs):
 		user_form = kwargs.pop('user_form')
 		super().__init__(*args, **kwargs)
+		self.fields['user_form'] = user_form
 		# submission_id = kwargs.pop('submission_id') #TODO: get from view
 
 		widgets = {
@@ -163,21 +164,21 @@ class SubmissionsForm(ModelForm):
 			'EML': forms.EmailField(),
 			'NUM': forms.IntegerField(),
 		}
-
 		fields = FormField.objects.filter(form_id=user_form)
-		i = 0
+		# i = 0
 		for field in fields:
 			# creates form fields corresponding to FormFields
-			i += 1
-			field_name = 'field_%s' % (i, )
+			# i += 1
+			# field_name = 'field_%s' % (i, )
+			field_name = 'field_%s' % (field.input_name, )
 			data_type = field.data_type
 			self.fields[field_name] = widgets.get(data_type)
 			try:
 				submissions = FieldSubmission.objects.filter(
 					submission=self.instance
 				)
-				# self.initial[field_name] = json.loads(submissions[field].data) #TODO: check if submissionfield.field_id has to be pk	
-			except ObjectDoesNotExist:
+				self.initial[field_name] = json.loads(submissions[field.id].data) 
+			except IndexError:
 				self.initial[field_name] = ''
 			
 	def clean(self):
@@ -185,14 +186,20 @@ class SubmissionsForm(ModelForm):
 			self.cleaned_data['fields'] '''
 		
 		ret_fields = []
+		# fields = FormField.objects.filter(form_id=self.instance.user_form)
+		# i = 0
+		# for field in fields:
+		# 	i += 1
+		# 	field_name = 'field_%s' % (i, )
+		# 	ret_fields.append(
+		# 		(field.id, self.cleaned_data[field_name])
+		# 		)
+		# self.cleaned_data['fields'] = ret_fields
+
 		fields = FormField.objects.filter(form_id=self.instance.user_form)
-		i = 0
 		for field in fields:
-			i += 1
-			field_name = 'field_%s' % (i, )
-			ret_fields.append(
-				(field.id, self.cleaned_data[field_name])
-				)
+			field_name = 'field_%s' % (field.input_name)
+			ret_fields.append((field_name, self.cleaned_data[field_name]))
 		self.cleaned_data['fields'] = ret_fields
 		
 
@@ -200,6 +207,7 @@ class SubmissionsForm(ModelForm):
 		''' create a new FieldSubmission object for each form field '''
 
 		submission = self.instance
+		submission.user_form = self.cleaned_data['user_form']
 		submission.fieldsubmission_set.all().delete()
 
 		for field in self.cleaned_data['fields']:
@@ -216,4 +224,5 @@ class SubmissionsForm(ModelForm):
 		as data will be read only once  '''
 
 		for field_name in self.fields:
-			yield self[field_name]
+			if field_name.startswith('field_'):
+				yield self[field_name]

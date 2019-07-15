@@ -118,10 +118,11 @@ def form_submit(request, form_id):
 		max_id = submissions[0].submission_id
 		submission_id = max_id + 1
 
-	form = SubmissionsForm(user_form=userform)
+	form = SubmissionsForm(user_form=userform, 
+		initial={'user_form': userform, 'submission_id': submission_id})
 	if request.method == 'POST':
 		form = SubmissionsForm(
-			request.POST, user_form=userform)
+			request.POST, user_form=userform, initial={'user_form': userform, 'submission_id': submission_id})
 		if form.is_valid():
 			form.save()
 			new_submission = Submissions(
