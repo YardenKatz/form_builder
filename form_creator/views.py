@@ -94,10 +94,10 @@ def form_submit(request, form_id):
 			request.POST, form_id=userform)#, submission_id=submission_id)
 		if form.is_valid():
 			submission = Submission(
-				form_id=userform,
-				submission_id=submission_id,
-				field_id=form.cleaned_data['field_id'],
-				data=form.cleaned_data['data']
+				# form_id=userform,
+				# submission_id=submission_id,
+				# field_id=form.cleaned_data['field_id'],
+				# data=form.cleaned_data['data']
 			)
 			submission.save()
 		

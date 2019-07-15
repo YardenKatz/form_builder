@@ -50,7 +50,7 @@ class SubmissionForm(ModelForm):
 
 	class Meta:
 		model = Submission
-		fields = ['data']
+		fields = ['data', 'submission_id']
 	
 
 	def __init__(self, *args, **kwargs):
@@ -71,10 +71,8 @@ class SubmissionForm(ModelForm):
 
 		submissions = Submission.objects.filter(
 			form_id=form_id).order_by('-submission_id')
-		# if not submissions:
 		try:
 			submission_id = 1
-		# else:
 		except ObjectDoesNotExist:
 			max_id = submissions[0].submission_id
 			submission_id = max_id + 1
@@ -87,9 +85,8 @@ class SubmissionForm(ModelForm):
 			self.fields['form_id'] = form_id
 			self.fields['submission_id'] = submission_id
 			self.fields['field_id'] = field.id
-			# self.fields[input_name] = widgets.get(data_type)
-			self.fields['data'] = forms.CharField()
-			self.fields['data'].label = label
+			self.fields['data'] = widgets.get(data_type)
+			# self.fields['data'].label = label
 			
 			try:
 				submission = Submission.objects.get(field_id = field.id)
