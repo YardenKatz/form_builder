@@ -7,7 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, Div, HTML, ButtonHolder, Submit
 from .custom_layout_object import *
-from .models import UserForm, FormField, Submission
+from .models import UserForm, FormField, Submissions, FieldSubmission
 
 
 class FormFieldsForm(ModelForm):
@@ -46,18 +46,113 @@ class UserFormForm(ModelForm):
             )
 
 
-class SubmissionForm(ModelForm):
+# class FieldSubmissionForm(ModelForm):
 
-	class Meta:
-		model = Submission
-		fields = ['data', 'submission_id']
+# 	class Meta:
+# 		model = FieldSubmission
+# 		fields = ['data', 'submission_id']
 	
 
+# 	def __init__(self, *args, **kwargs):
+# 		form_id = kwargs.pop('form_id')
+# 		# submissions = kwargs.pop('submissions')
+# 		# submission_id = kwargs.pop('submission_id')
+# 		super().__init__(*args, **kwargs)
+
+# 		widgets = {
+# 			# TODO: for each widget: attrs={
+#             # "class": "form-control",
+#             # "placeholder": "Your Name"
+#         # }
+# 			'TX': forms.CharField(max_length=100),
+# 			'EML': forms.EmailField(),
+# 			'NUM': forms.IntegerField(),
+# 		}
+
+# 		submissions = Submissions.objects.filter(
+# 			form_id=form_id).order_by('-submission_id')
+# 		try:
+# 			submission_id = 1
+# 		except ObjectDoesNotExist:
+# 			max_id = submissions[0].submission_id
+# 			submission_id = max_id + 1
+
+# 		fields = FormField.objects.filter(form_id=form_id)
+# 		for field in fields:
+# 			input_name = field.input_name
+# 			data_type = field.data_type
+# 			label = field.label
+# 			self.fields['form_id'] = form_id
+# 			self.fields['submission_id'] = submission_id
+# 			self.fields['field_id'] = field.id
+# 			self.fields['data'] = widgets.get(data_type)
+# 			# self.fields['data'].label = label
+			
+# 			try:
+# 				submission = Submissions.objects.get(field_id = field.id)
+# 				self.initial['data'] = json.loads(submission.data)
+				
+# 			except ObjectDoesNotExist:
+# 				self.initial['data'] = ''
+			
+# 	def clean(self):
+# 		# a list of tuples in the form of (field_id, data)
+# 		ret_fields = []
+# 		fields = FormField.objects.filter(self.form_id)
+# 		for field in fields:
+# 			ret_fields.append(
+# 				(field.id, self.cleaned_data[field.input_name])
+# 				)
+# 		self.cleaned_data['fields'] = ret_fields
+		
+
+# 	def save(self):
+# 		# submission = self.instance
+# 		# submission.form_id = self.cleaned_data['form_id']
+# 		# submission.field_id = self.cleaned_data['field_id']
+# 		# submission.submission_id = self.cleaned_data['submission_id']
+
+# 		for field in self.cleaned_data['fields']:
+# 			Submissions.objects.create(
+# 				form_id=self.cleaned_data['form_id'],
+# 				submission_id=self.cleaned_data['submission_id'],
+# 				# corresponding to the form of clean().ret_fields
+# 				field_id=field[0],
+# 				data=json.dumps(field[1])
+# 			)
+
+
+# 	def get_data_fields(self):
+# 		''' using yield for returning generator and saving memory space, 
+# 		as data will be read only once  '''
+
+# 		i = 0
+# 		# for field_name in self.fields:
+# 		# 	if field_name == 'data':
+# 		# 		# yield self[field_name]
+# 		# 		i+=1
+# 		# 		yield i		
+# 		# submission_id = self.fields['submission_id']
+# 		form_id = self.fields['form_id']
+# 		fields = FormField.objects.filter(form_id=form_id)
+# 		for field in fields:
+# 			current_field = Submissions.objects.get(form_id=form_id, field_id=field.id)
+# 			yield self[current_field]
+# 			i+=1
+# 			# yield i
+	
+
+
+class SubmissionsForm(ModelForm):
+
+	class Meta:
+		model = Submissions
+		exclude = ['user_form']
+		
 	def __init__(self, *args, **kwargs):
-		form_id = kwargs.pop('form_id')
-		# submissions = kwargs.pop('submissions')
-		# submission_id = kwargs.pop('submission_id')
+		user_form = kwargs.pop('user_form')
 		super().__init__(*args, **kwargs)
+		# submission_id = kwargs.pop('submission_id') #TODO: get from view
 
 		widgets = {
 			# TODO: for each widget: attrs={
@@ -69,53 +164,47 @@ class SubmissionForm(ModelForm):
 			'NUM': forms.IntegerField(),
 		}
 
-		submissions = Submission.objects.filter(
-			form_id=form_id).order_by('-submission_id')
-		try:
-			submission_id = 1
-		except ObjectDoesNotExist:
-			max_id = submissions[0].submission_id
-			submission_id = max_id + 1
-
-		fields = FormField.objects.filter(form_id=form_id)
+		fields = FormField.objects.filter(form_id=user_form)
+		i = 0
 		for field in fields:
-			input_name = field.input_name
+			# creates form fields corresponding to FormFields
+			i += 1
+			field_name = 'field_%s' % (i, )
 			data_type = field.data_type
-			label = field.label
-			self.fields['form_id'] = form_id
-			self.fields['submission_id'] = submission_id
-			self.fields['field_id'] = field.id
-			self.fields['data'] = widgets.get(data_type)
-			# self.fields['data'].label = label
-			
+			self.fields[field_name] = widgets.get(data_type)
 			try:
-				submission = Submission.objects.get(field_id = field.id)
-				self.initial['data'] = json.loads(submission.data)
-				
+				submissions = FieldSubmission.objects.filter(
+					submission=self.instance
+				)
+				# self.initial[field_name] = json.loads(submissions[field].data) #TODO: check if submissionfield.field_id has to be pk	
 			except ObjectDoesNotExist:
-				self.initial['data'] = ''
+				self.initial[field_name] = ''
 			
 	def clean(self):
-		# a list of tuples in the form of (field_id, data)
+		''' creates a list of tuples in the form of (field_id, data) in 
+			self.cleaned_data['fields'] '''
+		
 		ret_fields = []
-		fields = FormField.objects.filter(self.form_id)
+		fields = FormField.objects.filter(form_id=self.instance.user_form)
+		i = 0
 		for field in fields:
+			i += 1
+			field_name = 'field_%s' % (i, )
 			ret_fields.append(
-				(field.id, self.cleaned_data[field.input_name])
+				(field.id, self.cleaned_data[field_name])
 				)
 		self.cleaned_data['fields'] = ret_fields
 		
 
 	def save(self):
-		# submission = self.instance
-		# submission.form_id = self.cleaned_data['form_id']
-		# submission.field_id = self.cleaned_data['field_id']
-		# submission.submission_id = self.cleaned_data['submission_id']
+		''' create a new FieldSubmission object for each form field '''
+
+		submission = self.instance
+		submission.fieldsubmission_set.all().delete()
 
 		for field in self.cleaned_data['fields']:
-			Submission.objects.create(
-				form_id=self.cleaned_data['form_id'],
-				submission_id=self.cleaned_data['submission_id'],
+			FieldSubmission.objects.create(
+				submission=submission,
 				# corresponding to the form of clean().ret_fields
 				field_id=field[0],
 				data=json.dumps(field[1])
@@ -126,17 +215,5 @@ class SubmissionForm(ModelForm):
 		''' using yield for returning generator and saving memory space, 
 		as data will be read only once  '''
 
-		i = 0
-		# for field_name in self.fields:
-		# 	if field_name == 'data':
-		# 		# yield self[field_name]
-		# 		i+=1
-		# 		yield i		
-		# submission_id = self.fields['submission_id']
-		form_id = self.fields['form_id']
-		fields = FormField.objects.filter(form_id=form_id)
-		for field in fields:
-			yield self[field]
-			# i+=1
-			# yield i
-	
+		for field_name in self.fields:
+			yield self[field_name]

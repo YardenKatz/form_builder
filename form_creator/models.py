@@ -49,13 +49,19 @@ class FormField(models.Model):
 		return self.label
 
 
-class Submission(models.Model):
-	form_id = models.ForeignKey(UserForm, related_name='has_submisssions',
+class Submissions(models.Model):
+	user_form = models.ForeignKey(UserForm, related_name='has_submission',
 		on_delete=models.CASCADE)
 	submission_id = models.PositiveIntegerField() 
+
+
+class FieldSubmission(models.Model):
+	# form_id = models.ForeignKey(UserForm, related_name='has_submisssions',
+	# 	on_delete=models.CASCADE)
+	# submission_id = models.PositiveIntegerField() 
+	submission = models.ForeignKey(Submissions, on_delete=models.CASCADE)
 	field_id = models.OneToOneField(FormField, on_delete=models.CASCADE)
 	data = models.TextField()
-
 
 #class FormWizard(forms.ModelForm):
 #	class Meta:

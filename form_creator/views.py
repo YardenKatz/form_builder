@@ -78,31 +78,60 @@ class UserFormCreate(CreateView):
 		return reverse_lazy('form_list')
 
 
-def form_submit(request, form_id):
-	userform = UserForm.objects.get(pk=form_id)
-	# fields = FormField.objects.filter(form_id=form_id)
-	# submissions = Submission.objects.filter(form_id=form_id).order_by('-submission_id')
-	# if not submissions:
-	# 	submission_id = 1
-	# else:
-	# 	max_id = submissions[0].submission_id
-	# 	submission_id = max_id + 1
+# def form_submit(request, form_id):
+# 	userform = UserForm.objects.get(pk=form_id)
+# 	# fields = FormField.objects.filter(form_id=form_id)
+# 	# submissions = Submission.objects.filter(form_id=form_id).order_by('-submission_id')
+# 	# if not submissions:
+# 	# 	submission_id = 1
+# 	# else:
+# 	# 	max_id = submissions[0].submission_id
+# 	# 	submission_id = max_id + 1
 
-	form = SubmissionForm(form_id=userform)#, submission_id=submission_id)
+# 	form = SubmissionForm(form_id=userform)#, submission_id=submission_id)
+# 	if request.method == 'POST':
+# 		form = SubmissionForm(
+# 			request.POST, form_id=userform)#, submission_id=submission_id)
+# 		if form.is_valid():
+# 			submission = Submission(
+# 				# form_id=userform,
+# 				# submission_id=submission_id,
+# 				# field_id=form.cleaned_data['field_id'],
+# 				# data=form.cleaned_data['data']
+# 			)
+# 			submission.save()
+		
+# 	context = {
+# 		'name': userform.name, #TODO: remove if unnecessary
+# 		'form': form
+# 	}
+
+# 	return render(request, 'form_submit.html', context)
+
+
+def form_submit(request, form_id):
+	userform = UserForm.objects.get(id=form_id)
+	submissions = Submissions.objects.filter(user_form=userform).order_by('-submission_id')
+	if not submissions:
+		submission_id = 1
+	else:
+		max_id = submissions[0].submission_id
+		submission_id = max_id + 1
+
+	form = SubmissionsForm(user_form=userform)
 	if request.method == 'POST':
-		form = SubmissionForm(
-			request.POST, form_id=userform)#, submission_id=submission_id)
+		form = SubmissionsForm(
+			request.POST, user_form=userform)
 		if form.is_valid():
-			submission = Submission(
-				# form_id=userform,
-				# submission_id=submission_id,
-				# field_id=form.cleaned_data['field_id'],
-				# data=form.cleaned_data['data']
+			form.save()
+			new_submission = Submissions(
+				user_form=userform,
+				submission_id=submission_id
 			)
-			submission.save()
+			new_submission.save()
 		
 	context = {
-		'name': userform.name, #TODO: remove if unnecessary
+		'name': userform.name,
 		'form': form
 	}
 
