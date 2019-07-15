@@ -126,7 +126,17 @@ class SubmissionForm(ModelForm):
 		''' using yield for returning generator and saving memory space, 
 		as data will be read only once  '''
 
-		for field_name in self.fields:
-			if field_name == 'data':
-				yield self[field_name]
+		i = 0
+		# for field_name in self.fields:
+		# 	if field_name == 'data':
+		# 		# yield self[field_name]
+		# 		i+=1
+		# 		yield i		
+		# submission_id = self.fields['submission_id']
+		form_id = self.fields['form_id']
+		fields = FormField.objects.filter(form_id=form_id)
+		for field in fields:
+			yield self[field]
+			# i+=1
+			# yield i
 	
