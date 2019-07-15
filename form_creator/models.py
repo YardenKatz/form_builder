@@ -26,7 +26,7 @@ class UserForm(models.Model):
 	# 	return self.form_id.name
 
 	name = models.CharField(max_length=50)
-	submissions = models.PositiveSmallIntegerField()
+	# submissions = models.PositiveSmallIntegerField()
 	# created_by = models.ForeignKey(User,
 		# related_name='userforms', blank=True, null=True, 
 		# on_delete=models.SET_NULL)
@@ -51,9 +51,12 @@ class FormField(models.Model):
 
 class Submissions(models.Model):
 	user_form = models.ForeignKey(UserForm, related_name='has_submission',
-		on_delete=models.CASCADE)
+		on_delete=models.CASCADE, null=True)
 	submission_id = models.PositiveIntegerField() 
 
+	def __str__(self):
+		return self.submission_id
+	
 
 class FieldSubmission(models.Model):
 	# form_id = models.ForeignKey(UserForm, related_name='has_submisssions',
@@ -63,6 +66,9 @@ class FieldSubmission(models.Model):
 	field_id = models.OneToOneField(FormField, on_delete=models.CASCADE)
 	data = models.TextField()
 
+	def __str__(self):
+		return self.field_id
+	
 #class FormWizard(forms.ModelForm):
 #	class Meta:
 #		model = UserForm

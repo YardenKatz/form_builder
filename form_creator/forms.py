@@ -152,7 +152,7 @@ class SubmissionsForm(ModelForm):
 	def __init__(self, *args, **kwargs):
 		user_form = kwargs.pop('user_form')
 		super().__init__(*args, **kwargs)
-		self.fields['user_form'] = user_form
+		self.fields['user_form'] = UserForm.objects.get(id=user_form.id)
 		# submission_id = kwargs.pop('submission_id') #TODO: get from view
 
 		widgets = {
