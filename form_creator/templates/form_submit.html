@@ -7,6 +7,14 @@
 
 {% block content %}
 	<h2>Form submit page of Form {{ name }}</h2>
+
+	
+	{% for field in form.get_data_fields %}
+		{{ field }}
+	{% endfor %}
+		
+
 {% endblock content %}
+
 	
 	

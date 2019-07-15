@@ -78,22 +78,39 @@ class UserFormCreate(CreateView):
 		return reverse_lazy('form_list')
 
 
-def formSubmit(request, form_id):
+def form_submit(request, form_id):
 	userform = UserForm.objects.get(pk=form_id)
+	# fields = FormField.objects.filter(form_id=form_id)
+	# submissions = Submission.objects.filter(form_id=form_id).order_by('-submission_id')
+	# if not submissions:
+	# 	submission_id = 1
+	# else:
+	# 	max_id = submissions[0].submission_id
+	# 	submission_id = max_id + 1
+
+	form = SubmissionForm(form_id=userform)#, submission_id=submission_id)
+	if request.method == 'POST':
+		form = SubmissionForm(
+			request.POST, form_id=userform)#, submission_id=submission_id)
+		if form.is_valid():
+			submission = Submission(
+				form_id=userform,
+				submission_id=submission_id,
+				field_id=form.cleaned_data['field_id'],
+				data=form.cleaned_data['data']
+			)
+			submission.save()
+		
 	context = {
-		'name': userform.name,
+		'name': userform.name, #TODO: remove if unnecessary
+		'form': form
 	}
 
 	return render(request, 'form_submit.html', context)
 
 
-def formSubmissions(request, form_id):
-	userform = UserForm.objects.get(pk=form_id)
-	fields = FormField.objects.filter(form_id=form_id)
-	submissions = Submission.objects.filter(form_id=form_id)
-	submission_id = submissions.aggregate(Max('submission_id')) + 1
-
-	# TODO: call form with arguments
+def form_submissions(request, form_id):
+	
 	context = {
 	# 	'userform': userform,
 	# 	'fields': fields,

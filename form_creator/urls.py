@@ -8,7 +8,7 @@ urlpatterns = [
 	path('', views.FormListView.as_view(), name='form_list'),
 	path('create', views.UserFormCreate.as_view(), name='form_create'),
 	# path('form_confirm', views.formSubmitConfirm, name='form_submitted'),
-	path('form_submit/<int:form_id>', views.formSubmit, name='form_submit'),
-	path('form_submissions/<int:form_id>', views.formSubmissions, 
+	path('form_submit/<int:form_id>', views.form_submit, name='form_submit'),
+	path('form_submissions/<int:form_id>', views.form_submissions, 
 		name='form_submissions'),
 ]
