@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 <!-- {% load crispy_forms_tags %} -->
 <!-- {% load staticfiles %} -->
-<!-- <table class="col-md-9" style="margin-left: 10px;"> -->
+<table class="col-md-9" style="margin-left: 10px;">
 <!-- {{ formset.management_form|crispy }} -->
 
 {% block title %}
@@ -17,10 +17,13 @@
 	<form method="POST">
 		{% csrf_token %}
 		{% for field in form.get_data_fields %}
-		<!-- TODO: change to correct label -->
-			<!-- {{ field.label_tag}}  -->
-			{{ field|as_crispy_field }}
-		{% endfor %}
+			<!-- <tr class="{% cycle 'row1' 'row2' %} formset_row-{{ formset.prefix }}"> -->
+			<tr>
+			<!-- TODO: change to correct label -->
+				<!-- {{ field.label_tag}}  -->
+				<td>{{ field }}</td>
+			{% endfor %}
+		</tr>
 		<button type="submit" class="btn btn-primary">Submit</button>
 	</form>
 

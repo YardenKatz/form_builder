@@ -63,7 +63,7 @@ class FieldSubmission(models.Model):
 	# 	on_delete=models.CASCADE)
 	# submission_id = models.PositiveIntegerField() 
 	submission = models.ForeignKey(Submissions, on_delete=models.CASCADE, related_name='field_set')
-	field_id = models.OneToOneField(FormField, on_delete=models.CASCADE)
+	field_id = models.ForeignKey(FormField, on_delete=models.CASCADE)
 	data = models.TextField()
 
 	# def __str__(self):
