@@ -62,7 +62,7 @@ class FieldSubmission(models.Model):
 	# form_id = models.ForeignKey(UserForm, related_name='has_submisssions',
 	# 	on_delete=models.CASCADE)
 	# submission_id = models.PositiveIntegerField() 
-	submission = models.ForeignKey(Submissions, on_delete=models.CASCADE)
+	submission = models.ForeignKey(Submissions, on_delete=models.CASCADE, related_name='field_set')
 	field_id = models.OneToOneField(FormField, on_delete=models.CASCADE)
 	data = models.TextField()
 

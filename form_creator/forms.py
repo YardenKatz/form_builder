@@ -9,6 +9,7 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, Fieldset, Div, HTML, ButtonHolder, Submit
 from .custom_layout_object import *
 from .models import UserForm, FormField, Submissions, FieldSubmission
+from django.http import HttpResponse #TODO: delete
 
 
 class FormFieldsForm(ModelForm):
@@ -148,11 +149,12 @@ class SubmissionsForm(ModelForm):
 
 	class Meta:
 		model = Submissions
-		# fields = '__all__'
-		exclude = ('user_form', 'submission_id')
+		fields = '__all__'
+		# exclude = ('user_form', 'submission_id')
 
 	def __init__(self, *args, **kwargs):
 		user_form = kwargs.pop('user_form')
+		self.user_form = user_form
 		super().__init__(*args, **kwargs)
 		# self.fields['user_form'] = UserForm.objects.get(id=user_form.id)
 		# submission_id = kwargs.pop('submission_id') #TODO: get from view
@@ -182,6 +184,7 @@ class SubmissionsForm(ModelForm):
 				self.initial[field_name] = json.loads(submissions[field.pk].data) 
 			except IndexError:
 				self.initial[field_name] = ''
+		self.initial['user_form'] = user_form
 			
 	def clean(self):
 		''' creates a list of tuples in the form of (field_id, data) in 
@@ -198,10 +201,13 @@ class SubmissionsForm(ModelForm):
 		# 		)
 		# self.cleaned_data['fields'] = ret_fields
 
-		fields = FormField.objects.filter(form_id=self.instance.user_form)
+		i = 0
+		fields = FormField.objects.filter(form_id=self.user_form)
 		for field in fields:
+			i += 1
+			# ret_fields.append(i)
 			field_name = 'field_%s' % (field.input_name)
-			ret_fields.append((field.pk, self.cleaned_data[field_name]))
+			ret_fields.append((field, self.cleaned_data[field_name]))
 		self.cleaned_data['fields'] = ret_fields
 		
 
@@ -214,9 +220,22 @@ class SubmissionsForm(ModelForm):
 		# submission.user_form = user_form
 		# submission.submission_id = submission_id
 		# submission.user_form = self.cleaned_data['user_form']
-		submission.fieldsubmission_set.all().delete()
+		# submission.field_set.all().delete()
+
+
+		# Submissions.objects.create(
+		# 	user_form=user_form,
+		# 	submission_id=submission_id
+		# )
 
 		for field in self.cleaned_data['fields']:
+		# 	field_submisssion = FieldSubmission(
+		# 		submission=submission,
+		# 		# corresponding to the form of clean().ret_fields
+		# 		field_id=field[0],
+		# 		data=json.dumps(field[1])
+		# 	)
+		# 	field_submisssion.save()
 			FieldSubmission.objects.create(
 				submission=submission,
 				# corresponding to the form of clean().ret_fields
@@ -224,11 +243,6 @@ class SubmissionsForm(ModelForm):
 				data=json.dumps(field[1])
 			)
 		
-		# Submissions.objects.create(
-		# 	user_form=self.cleaned_data['user_form'],
-		# 	submission_id=self.cleaned_data['submission_id'],
-		# )
-
 		return submission
 		# return redirect('form_list.html')
 

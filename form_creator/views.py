@@ -124,15 +124,30 @@ def form_submit(request, form_id):
 		form = SubmissionsForm(
 			request.POST, user_form=userform)#, initial={'user_form': userform, 'submission_id': submission_id})
 		if form.is_valid():
-			submission = form.save(commit=False, user_form=userform, submission_id=submission_id)
-			submission.user_form=userform
-			submission.submission_id=submission_id
-			submission.save()
-			new_submission = Submissions(
+			submission = Submissions.objects.create(
 				user_form=userform,
 				submission_id=submission_id
 			)
-			new_submission.save()
+			# form.save(user_form=userform, submission_id=submission_id)
+			form.save(submission=submission)
+			# submission = form.save(user_form=userform, submission_id=submission_id)
+			# submission.user_form=userform
+			# check_context = {
+			# 'fields': form.cleaned_data['fields'],
+			# 'model': form.cleaned_data['field_car_model'],
+			# 'color': form.cleaned_data['field_color'],
+			# 'year': form.cleaned_data['field_year'],
+			# 'email': form.cleaned_data['field_email'],
+			# 'userform': submission.user_form
+			# }
+			# # return render(request, 'confirm.html', check_context)
+			# submission.submission_id=submission_id
+			# submission.save()
+			# new_submission = Submissions(
+			# 	user_form=userform,
+			# 	submission_id=submission_id
+			# )
+			# new_submission.save()
 			return redirect('/form_builder/')
 
 	context = {
@@ -159,6 +174,9 @@ def form_submissions(request, form_id):
 
 
 
+def confirm(request):
 
+	context = {}
+	return render(request, 'confirm.html', context)
 
 
