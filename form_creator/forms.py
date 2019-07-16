@@ -1,6 +1,7 @@
 import json
 from django import forms
 from django.forms import ModelForm
+from django.shortcuts import redirect
 from django.forms.models import inlineformset_factory
 from django.db.models import Max
 from django.core.exceptions import ObjectDoesNotExist
@@ -147,12 +148,13 @@ class SubmissionsForm(ModelForm):
 
 	class Meta:
 		model = Submissions
-		exclude = ['user_form']
+		# fields = '__all__'
+		exclude = ('user_form', 'submission_id')
 
 	def __init__(self, *args, **kwargs):
 		user_form = kwargs.pop('user_form')
 		super().__init__(*args, **kwargs)
-		self.fields['user_form'] = UserForm.objects.get(id=user_form.id)
+		# self.fields['user_form'] = UserForm.objects.get(id=user_form.id)
 		# submission_id = kwargs.pop('submission_id') #TODO: get from view
 
 		widgets = {
@@ -177,7 +179,7 @@ class SubmissionsForm(ModelForm):
 				submissions = FieldSubmission.objects.filter(
 					submission=self.instance
 				)
-				self.initial[field_name] = json.loads(submissions[field.id].data) 
+				self.initial[field_name] = json.loads(submissions[field.pk].data) 
 			except IndexError:
 				self.initial[field_name] = ''
 			
@@ -199,15 +201,19 @@ class SubmissionsForm(ModelForm):
 		fields = FormField.objects.filter(form_id=self.instance.user_form)
 		for field in fields:
 			field_name = 'field_%s' % (field.input_name)
-			ret_fields.append((field_name, self.cleaned_data[field_name]))
+			ret_fields.append((field.pk, self.cleaned_data[field_name]))
 		self.cleaned_data['fields'] = ret_fields
 		
 
-	def save(self):
+	def save(self, *args, **kwargs):
 		''' create a new FieldSubmission object for each form field '''
 
+		user_form = kwargs.pop('user_form')
+		submission_id = kwargs.pop('submission_id')
 		submission = self.instance
-		submission.user_form = self.cleaned_data['user_form']
+		# submission.user_form = user_form
+		# submission.submission_id = submission_id
+		# submission.user_form = self.cleaned_data['user_form']
 		submission.fieldsubmission_set.all().delete()
 
 		for field in self.cleaned_data['fields']:
@@ -217,6 +223,14 @@ class SubmissionsForm(ModelForm):
 				field_id=field[0],
 				data=json.dumps(field[1])
 			)
+		
+		# Submissions.objects.create(
+		# 	user_form=self.cleaned_data['user_form'],
+		# 	submission_id=self.cleaned_data['submission_id'],
+		# )
+
+		return submission
+		# return redirect('form_list.html')
 
 
 	def get_data_fields(self):

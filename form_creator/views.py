@@ -110,7 +110,7 @@ class UserFormCreate(CreateView):
 
 
 def form_submit(request, form_id):
-	userform = UserForm.objects.get(id=form_id)
+	userform = UserForm.objects.get(pk=form_id)
 	submissions = Submissions.objects.filter(user_form=userform).order_by('-submission_id')
 	if not submissions:
 		submission_id = 1
@@ -124,14 +124,21 @@ def form_submit(request, form_id):
 		form = SubmissionsForm(
 			request.POST, user_form=userform)#, initial={'user_form': userform, 'submission_id': submission_id})
 		if form.is_valid():
-			form.save()
+			submission = form.save(commit=False, user_form=userform, submission_id=submission_id)
+			submission.user_form=userform
+			submission.submission_id=submission_id
+			submission.save()
 			new_submission = Submissions(
 				user_form=userform,
 				submission_id=submission_id
 			)
 			new_submission.save()
-		
+			return redirect('/form_builder/')
+
 	context = {
+		# TODO: delete unused context
+		'userform': userform,
+		'submission_id': submission_id,
 		'name': userform.name,
 		'form': form
 	}

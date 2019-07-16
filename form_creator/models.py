@@ -51,11 +51,11 @@ class FormField(models.Model):
 
 class Submissions(models.Model):
 	user_form = models.ForeignKey(UserForm, related_name='has_submission',
-		on_delete=models.CASCADE, null=True)
-	submission_id = models.PositiveIntegerField() 
+		on_delete=models.CASCADE, blank=True, null=True)
+	submission_id = models.PositiveIntegerField(blank=True, null=True) 
 
 	def __str__(self):
-		return self.submission_id
+		return str(self.submission_id)
 	
 
 class FieldSubmission(models.Model):
