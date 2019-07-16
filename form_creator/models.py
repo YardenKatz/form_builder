@@ -40,8 +40,8 @@ class FormField(models.Model):
 	form_id = models.ForeignKey(UserForm, related_name='has_fields',
 		on_delete=models.CASCADE)
 	# field_id = models.IntegerField()
-	label = models.CharField(max_length=30)
 	input_name = models.CharField(max_length=30)
+	label = models.CharField(max_length=30)
 	data_type = models.CharField(max_length=3, choices=FIELD_TYPES)
 	# data = models.TextField(blank=True)
 
@@ -66,8 +66,8 @@ class FieldSubmission(models.Model):
 	field_id = models.ForeignKey(FormField, on_delete=models.CASCADE)
 	data = models.TextField()
 
-	# def __str__(self):
-	# 	return self.field_id
+	def __str__(self):
+		return self.field_id.__str__
 	
 #class FormWizard(forms.ModelForm):
 #	class Meta:

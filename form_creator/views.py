@@ -162,11 +162,25 @@ def form_submit(request, form_id):
 
 
 def form_submissions(request, form_id):
-	
+	form_name = UserForm.objects.get(pk=form_id).name
+	fields = FormField.objects.filter(form_id=form_id)
+	submissions = Submissions.objects.filter(user_form=form_id)
+	# submission_fields = FieldSubmission.objects.filter(submission__user_form=form_id)
+	sumbission_fields_collection = []
+	for submission in submissions:
+	# 	i = 0
+		# fields_per_submission = {}
+		fields_per_submission = FieldSubmission.objects.filter(submission__user_form=form_id,
+			submission=submission).values()
+	# 	for field in fields:
+	# 		fields_per_submission[i] = field
+		sumbission_fields_collection.append(fields_per_submission)
+
 	context = {
-	# 	'userform': userform,
-	# 	'fields': fields,
-	# 	'submissions': submissions,
+		'form_name': form_name,
+		'fields': fields,
+		'submissions': submissions,
+		'submission_fields': sumbission_fields_collection
 	}
 
 	return render(request, 'form_submissions.html', context)

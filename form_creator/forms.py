@@ -20,7 +20,7 @@ class FormFieldsForm(ModelForm):
 
 FormFieldFormSet = inlineformset_factory(
 	UserForm, FormField, extra=1, form=FormFieldsForm, 
-	fields=['label', 'input_name', 'data_type'], can_delete=True,
+	fields=['input_name', 'label', 'data_type'], can_delete=True,
 	)
 
 
@@ -184,6 +184,7 @@ class SubmissionsForm(ModelForm):
 				self.initial[field_name] = json.loads(submissions[field.pk].data) 
 			except IndexError:
 				self.initial[field_name] = ''
+			self.fields[field_name].label = field.label
 		self.initial['user_form'] = user_form
 			
 	def clean(self):

@@ -1,60 +1,30 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} -->
 {% load crispy_forms_tags %}
-{% load staticfiles %}
+ {% load staticfiles %}
 
 {% block title %}
 	{{ name }} submit
 {% endblock title %}
 
-
 {% block content %}
-	<h2>Form submit page of Form {{ name }}</h2>
-	<h2>UserForm: {{ userform }} </h2>
-	<h2>submission id: {{ submission_id }}</h2>
+	<h2>Submit {{ userform.name }} Form</h2>
 	
 	<form method="POST">
 		{% csrf_token %}
-
-	<table class="col-md-9" style="margin-left: 10px;">
+		<table class="col-md-15" style="margin-left: 10px;">
 			{{ formset.management_form|crispy }}
-			
 			<tr>
-				{% for field in form.get_data_fields %}
-						
-						<td>
-							<!-- {# Include the hidden fields in the form #}
-							{% if forloop.first %}
-								{% for hidden in form.hidden_fields %}
-									{{ hidden }}
-								{% endfor %}
-							{% endif %} -->
-							<!-- {{ field.errors.as_ul }} -->
-							{{ field|as_crispy_field }}
-						</td>
-						
-						{% endfor %}
+				{% for field in form.get_data_fields %}	
+					<td>{{ field|as_crispy_field }}</td>
+				{% endfor %}
 			</tr>
-			
-			</table>
-<!-- 			
-		<tr>
-			{% for field in form.get_data_fields %}
-				<th>{{ field.label }}</th>
-			{% endfor %}
-		</tr>
-		<tr>
-			{% for field in form.get_data_fields %}
-				<td>{{ field }}</td>
-			{% endfor %}
-		</tr> -->
-			<!-- TODO: change to correct label -->
-				<!-- {{ field.label_tag}}  -->
-			<!--	<td>{{ field }}</td> -->
-		<button type="submit" class="btn btn-primary">Submit</button>
+			<tr>
+				<td>
+					<button type="submit" class="btn btn-primary">Submit</button>
+				</td>
+			</tr>
+		</table>
 	</form>
-
-		
-		
 
 {% endblock content %}
 
