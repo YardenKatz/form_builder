@@ -217,8 +217,9 @@ class SubmissionsForm(ModelForm):
 		user_form = kwargs.pop('user_form')
 		submission_id = kwargs.pop('submission_id')
 		submission = self.instance
-		# submission.user_form = user_form
-		# submission.submission_id = submission_id
+		submission.user_form = user_form
+		submission.submission_id = submission_id
+		submission.save()
 		# submission.user_form = self.cleaned_data['user_form']
 		# submission.field_set.all().delete()
 
@@ -243,7 +244,7 @@ class SubmissionsForm(ModelForm):
 				data=json.dumps(field[1])
 			)
 		
-		return submission
+		# return submission
 		# return redirect('form_list.html')
 
 

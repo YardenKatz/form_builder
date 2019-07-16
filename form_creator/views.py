@@ -124,12 +124,12 @@ def form_submit(request, form_id):
 		form = SubmissionsForm(
 			request.POST, user_form=userform)#, initial={'user_form': userform, 'submission_id': submission_id})
 		if form.is_valid():
-			submission = Submissions.objects.create(
-				user_form=userform,
-				submission_id=submission_id
-			)
-			# form.save(user_form=userform, submission_id=submission_id)
-			form.save(submission=submission)
+			# submission = Submissions.objects.create(
+			# 	user_form=userform,
+			# 	submission_id=submission_id
+			# )
+			form.save(user_form=userform, submission_id=submission_id)
+			# form.save(submission=submission)
 			# submission = form.save(user_form=userform, submission_id=submission_id)
 			# submission.user_form=userform
 			# check_context = {

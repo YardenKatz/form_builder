@@ -66,8 +66,8 @@ class FieldSubmission(models.Model):
 	field_id = models.OneToOneField(FormField, on_delete=models.CASCADE)
 	data = models.TextField()
 
-	def __str__(self):
-		return self.field_id
+	# def __str__(self):
+	# 	return self.field_id
 	
 #class FormWizard(forms.ModelForm):
 #	class Meta:
