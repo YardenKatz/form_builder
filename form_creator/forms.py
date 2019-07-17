@@ -167,6 +167,9 @@ class SubmissionsForm(ModelForm):
 			'TX': forms.CharField(max_length=100),
 			'EML': forms.EmailField(),
 			'NUM': forms.IntegerField(),
+			'DATE': forms.DateField(),
+			# 'TEL': forms
+			# 'COL': 
 		}
 		fields = FormField.objects.filter(form_id=user_form)
 		# i = 0
