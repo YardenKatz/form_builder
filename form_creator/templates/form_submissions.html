@@ -9,29 +9,22 @@
 {% block content %}
 	<h2>Form Submissions Of {{ form_name }} Form </h2>
 
-<table>
-	<tr>
-		{% for field in fields %}
-			<th> {{ field.input_name }}</th>	
-		{% endfor %}
-	</tr>
-	
-	{% for submission in submissions %}
-		<tr>
-			{% for field in fields %}
-				<td>
-					<!-- {{ submission|hash:0}} -->
-					{{ submission_fields|hash:field.id }} }}
-				</td>
-			<!-- {% with field as key %}
-			<td> {{ submission_fields.key }}</td>	
-			{% endwith %} -->
-				
+	<table>
+			<tr>
+				{% for field in fields %}
+					<th> {{ field.input_name }}</th>	
+				{% endfor %}
+			</tr>
+			
+			{% for key, values in submission_fields.items %}
+				<tr>
+					{% for v in values %}
+					<td>{{ v }}</td>
+					{% endfor %}
+				</tr>
+					
 			{% endfor %}
-		</tr>
-	{% endfor %}
-		
-</table>
+				
+	</table>
 {% endblock content %}
-	
 	

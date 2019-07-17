@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+	{{ form_name }} submissions
+{% endblock title %}
+
+{% load dict_access %}
+
+{% block content %}
+	<h2>Form Submissions Of {{ form_name }} Form </h2>
+
+<table>
+	<tr>
+		{% for field in fields %}
+			<th> {{ field.input_name }}</th>	
+		{% endfor %}
+	</tr>
+	
+	<!-- {% for submission in submissions %} -->
+		<tr>
+			<!-- {% for data in submission_fields|hash:forloop.counter0 %} -->
+				<td>
+					<!-- {{ submission|hash:0}} -->
+					<!-- {{ submission_fields|hash:field.id }} }} -->
+					<!-- {{ data.data }} -->
+				</td>
+			<!-- {% with field as key %}
+			<td> {{ submission_fields.key }}</td>	
+			{% endwith %} -->
+				
+			<!-- {% endfor %} -->
+		</tr>
+	<!-- {% endfor %} -->
+		
+</table>
+{% endblock content %}
+	
+	
