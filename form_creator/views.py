@@ -178,12 +178,10 @@ def form_submissions(request, form_id):
 	i = 0
 	for submission in submissions:
 		i += 1
-		submission_data = FieldSubmission.objects.filter(submission__user_form=form_id, submission=submission).values_list('data', flat=True)#.order_by('field_id__input_name')
+		submission_data = FieldSubmission.objects.filter(submission__user_form=form_id, submission=submission).values_list('data', flat=True).order_by('field_id__input_name')
 		# submission_data = FieldSubmission.objects.only('data').order_by('field_id__input_name').values_list()
 		sumbission_fields_collection[i] = submission_data
 		
-	print(sumbission_fields_collection)
-
 	context = {
 		'form_name': form_name,
 		'fields': fields,

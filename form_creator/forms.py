@@ -176,7 +176,11 @@ class SubmissionsForm(ModelForm):
 			# field_name = 'field_%s' % (i, )
 			field_name = 'field_%s' % (field.input_name, )
 			data_type = field.data_type
+			label = field.label
+			
+			# print(field_name, label, data_type)
 			self.fields[field_name] = widgets.get(data_type)
+			self.fields[field_name].widget.label = label
 			try:
 				submissions = FieldSubmission.objects.filter(
 					submission=self.instance
@@ -184,7 +188,6 @@ class SubmissionsForm(ModelForm):
 				self.initial[field_name] = json.loads(submissions[field.pk].data) 
 			except IndexError:
 				self.initial[field_name] = ''
-			self.fields[field_name].label = field.label
 		self.initial['user_form'] = user_form
 			
 	def clean(self):
