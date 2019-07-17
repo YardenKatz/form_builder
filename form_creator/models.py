@@ -26,7 +26,7 @@ class UserForm(models.Model):
 	# 	return self.form_id.name
 
 	name = models.CharField(max_length=50)
-	# submissions = models.PositiveSmallIntegerField()
+	submissions = models.PositiveSmallIntegerField(default=0)
 	# created_by = models.ForeignKey(User,
 		# related_name='userforms', blank=True, null=True, 
 		# on_delete=models.SET_NULL)

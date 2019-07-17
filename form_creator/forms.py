@@ -178,7 +178,6 @@ class SubmissionsForm(ModelForm):
 			data_type = field.data_type
 			label = field.label
 			
-			# print(field_name, label, data_type)
 			self.fields[field_name] = widgets.get(data_type)
 			self.fields[field_name].widget.label = label
 			try:
