@@ -1,5 +1,10 @@
+from django.db.models.signals import post_save
 from django.db import models
 from django.contrib.auth.models import User
+from django.db.models import F
+
+
+
 # from django.forms import ModelForm
 # from django import forms
 
@@ -26,7 +31,7 @@ class UserForm(models.Model):
 	# 	return self.form_id.name
 
 	name = models.CharField(max_length=50)
-	submissions = models.PositiveSmallIntegerField(default=0)
+	submissions_counter = models.PositiveSmallIntegerField(default=0)
 	# created_by = models.ForeignKey(User,
 		# related_name='userforms', blank=True, null=True, 
 		# on_delete=models.SET_NULL)
@@ -57,6 +62,16 @@ class Submissions(models.Model):
 	def __str__(self):
 		return str(self.submission_id)
 	
+
+def update_submissions_count(sender, instance, created, **kwargs):
+    if created:
+        submission = instance
+        user_form = submission.user_form
+        user_form.submissions_counter = F('submissions_counter') + 1 # F to avoid race condition
+        user_form.save(update_fields=['submissions_counter']) 
+
+post_save.connect(update_submissions_count, sender=Submissions)
+
 
 class FieldSubmission(models.Model):
 	# form_id = models.ForeignKey(UserForm, related_name='has_submisssions',

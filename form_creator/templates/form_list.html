@@ -26,7 +26,7 @@
 				<tr>
 					<td></td>
 					<td>{{ each.name }}</td>
-					<td>{{ each.submissions }}</td>
+					<td>{{ each.submissions_counter }}</td>
 					<td>
 						<a href="{% url 'form_submit' form_id=each.pk %}"
 						class="btn btn-primary">
