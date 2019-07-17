@@ -5,6 +5,7 @@ from django.db.models import F
 
 
 
+
 # from django.forms import ModelForm
 # from django import forms
 FIELD_TYPES = [
@@ -12,7 +13,7 @@ FIELD_TYPES = [
 	('COL', 'Color'),
 	('DATE', 'Date'),
 	('EML', 'Email'),
-	('TEL', 'Tel'),
+	# ('TEL', 'Tel'),
 	('NUM', 'Number'),
 ]
 

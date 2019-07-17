@@ -10,6 +10,8 @@ from crispy_forms.layout import Layout, Field, Fieldset, Div, HTML, ButtonHolder
 from .custom_layout_object import *
 from .models import UserForm, FormField, Submissions, FieldSubmission
 from django.http import HttpResponse #TODO: delete
+# from phonenumber_field.formfields import PhoneNumberField
+#from phone_field import PhoneField
 
 
 class FormFieldsForm(ModelForm):
@@ -168,7 +170,7 @@ class SubmissionsForm(ModelForm):
 			'EML': forms.EmailField(),
 			'NUM': forms.IntegerField(),
 			'DATE': forms.DateField(),
-			# 'TEL': forms
+			# 'TEL': PhoneNumberField()
 			# 'COL': 
 		}
 		fields = FormField.objects.filter(form_id=user_form)
