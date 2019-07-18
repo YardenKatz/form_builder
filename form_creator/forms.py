@@ -171,7 +171,7 @@ class SubmissionsForm(ModelForm):
 			'TX': forms.CharField(max_length=100),
 			'EML': forms.EmailField(),
 			'NUM': forms.IntegerField(),
-			'DAT': forms.DateField(widget=forms.SelectDateWidget(), initial=datetime.datetime.now())#, label='Date'),
+			'DAT': forms.DateField(widget=forms.SelectDateWidget(years=range(1980, 2020))),
 			# 'TEL': PhoneNumberField()
 			# 'COL': 
 		}
@@ -184,9 +184,8 @@ class SubmissionsForm(ModelForm):
 			field_name = 'field_%s' % (field.input_name, )
 			data_type = field.data_type
 			label = field.label
-			
 			self.fields[field_name] = widgets.get(data_type)
-			self.fields[field_name].widget.label = label
+			self.fields[field_name].label = label
 				
 			try:
 				submissions = FieldSubmission.objects.filter(
