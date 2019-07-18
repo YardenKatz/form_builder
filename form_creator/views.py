@@ -44,7 +44,8 @@ class UserFormCreate(CreateView):
 
 def form_submit(request, form_id):
 	userform = UserForm.objects.get(pk=form_id)
-	submissions = Submissions.objects.filter(user_form=userform).order_by('-submission_id')
+	submissions = Submissions.objects.filter(
+		user_form=userform).order_by('-submission_id')
 	if not submissions:
 		submission_id = 1
 	else:
@@ -77,7 +78,9 @@ def form_submissions(request, form_id):
 	i = 0
 	for submission in submissions:
 		i += 1
-		submission_data = FieldSubmission.objects.filter(submission__user_form=form_id, submission=submission).values_list('data', flat=True).order_by('field_id__input_name')
+		submission_data = FieldSubmission.objects.filter(
+			submission__user_form=form_id, submission=submission).values_list(
+				'data', flat=True).order_by('field_id__input_name')
 		sumbission_fields_collection[i] = submission_data
 		
 	context = {

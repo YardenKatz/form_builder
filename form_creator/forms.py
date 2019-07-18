@@ -42,8 +42,8 @@ class UserFormForm(ModelForm):
                     Formset('form_fields')),
                 HTML("<br>"),
                 ButtonHolder(Submit('submit', 'save')),
-                )
-            )
+			)
+		)
 
 
 class SubmissionsForm(ModelForm):
@@ -61,7 +61,8 @@ class SubmissionsForm(ModelForm):
 			'TX': forms.CharField(max_length=100),
 			'EML': forms.EmailField(),
 			'NUM': forms.IntegerField(),
-			'DAT': forms.DateField(widget=forms.SelectDateWidget(years=range(1980, 2020))),
+			'DAT': forms.DateField(widget=forms.SelectDateWidget(
+				years=range(1980, 2020))),
 		}
 
 		fields = FormField.objects.filter(form_id=user_form)
@@ -74,9 +75,9 @@ class SubmissionsForm(ModelForm):
 				
 			try:
 				submissions = FieldSubmission.objects.filter(
-					submission=self.instance
-				)
-				self.initial[field_name] = json.loads(submissions[field.pk].data) 
+					submission=self.instance)
+				self.initial[field_name] = json.loads(
+					submissions[field.pk].data) 
 			except IndexError:
 				self.initial[field_name] = ''
 		self.initial['user_form'] = user_form
