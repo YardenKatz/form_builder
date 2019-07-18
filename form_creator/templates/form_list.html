@@ -6,14 +6,11 @@
 	
 
 {% block content %}
-	<!-- <table class="col-md-9" style="margin-left: 10px;"> -->
 	<br>
 	<h1 align="center">Form List</h1>
 	<br>
 	{% include '_table_counter.html' %}
-	<table>
-		<!-- <tr class="{% cycle 'row1' 'row2' %} formset_row-{{ formset.prefix }}"> -->
-			
+	<table>	
 			{% if form_list %}
 				<tr>
 					<th>Form Id</th>

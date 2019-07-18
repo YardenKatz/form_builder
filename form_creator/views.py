@@ -90,8 +90,3 @@ def form_submissions(request, form_id):
 	return render(request, 'form_submissions.html', context)
 
 
-# def confirm(request):
-# 	context = {}
-# 	return render(request, 'confirm.html', context)
-
-
