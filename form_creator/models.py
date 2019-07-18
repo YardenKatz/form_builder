@@ -10,11 +10,11 @@ from django.db.models import F
 # from django import forms
 FIELD_TYPES = [
 	('TX', 'Text'),
-	('COL', 'Color'),
-	('DATE', 'Date'),
-	('EML', 'Email'),
-	# ('TEL', 'Tel'),
 	('NUM', 'Number'),
+	('DAT', 'Date'),
+	('EML', 'Email'),
+	# ('COL', 'Color'),
+	# ('TEL', 'Tel'),
 ]
 
 # class FormList(models.Model):
