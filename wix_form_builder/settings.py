@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 	'form_creator',
 	'crispy_forms',
 	'phonenumber_field',
+	'colorfield',
 	#'phone_field'
 ]
 

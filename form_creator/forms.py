@@ -13,6 +13,7 @@ from .models import UserForm, FormField, Submissions, FieldSubmission
 from django.http import HttpResponse #TODO: delete
 import datetime
 from phonenumber_field.formfields import PhoneNumberField
+from colorfield.fields import ColorField
 # from phonenumber_field.serializerfields import PhoneNumberField
 #from phone_field import PhoneField
 
@@ -173,8 +174,8 @@ class SubmissionsForm(ModelForm):
 			'EML': forms.EmailField(),
 			'NUM': forms.IntegerField(),
 			'DAT': forms.DateField(widget=forms.SelectDateWidget(years=range(1980, 2020))),
-			'TEL': forms.CharField(max_length=14)#widget=forms.TextInput)
-			# 'COL': 
+			'TEL': forms.CharField(max_length=14),#widget=forms.TextInput)
+			'COL': ColorField(default='#FF0000'),
 		}
 		fields = FormField.objects.filter(form_id=user_form)
 		# i = 0
