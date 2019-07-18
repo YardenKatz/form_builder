@@ -14,7 +14,7 @@ FIELD_TYPES = [
 	('DAT', 'Date'),
 	('EML', 'Email'),
 	# ('COL', 'Color'),
-	# ('TEL', 'Tel'),
+	('TEL', 'Tel'),
 ]
 
 # class FormList(models.Model):

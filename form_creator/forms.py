@@ -12,7 +12,8 @@ from .custom_layout_object import *
 from .models import UserForm, FormField, Submissions, FieldSubmission
 from django.http import HttpResponse #TODO: delete
 import datetime
-# from phonenumber_field.formfields import PhoneNumberField
+from phonenumber_field.formfields import PhoneNumberField
+# from phonenumber_field.serializerfields import PhoneNumberField
 #from phone_field import PhoneField
 
 
@@ -172,7 +173,7 @@ class SubmissionsForm(ModelForm):
 			'EML': forms.EmailField(),
 			'NUM': forms.IntegerField(),
 			'DAT': forms.DateField(widget=forms.SelectDateWidget(years=range(1980, 2020))),
-			# 'TEL': PhoneNumberField()
+			'TEL': forms.CharField(max_length=14)#widget=forms.TextInput)
 			# 'COL': 
 		}
 		fields = FormField.objects.filter(form_id=user_form)
@@ -184,7 +185,11 @@ class SubmissionsForm(ModelForm):
 			field_name = 'field_%s' % (field.input_name, )
 			data_type = field.data_type
 			label = field.label
+			# if data_type == 'TEL':
+			# 	self.fields[field_name].widget = widgets.get(data_type)
+			# else:
 			self.fields[field_name] = widgets.get(data_type)
+
 			self.fields[field_name].label = label
 				
 			try:

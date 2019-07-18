@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 	'form_creator',
 	'crispy_forms',
-	# 'phonenumber_field',
+	'phonenumber_field',
 	#'phone_field'
 ]
 
