@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.urls import path
 from . import views
+from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.generic.base import RedirectView
+
 
 urlpatterns = [
 	# path('', views.index, name='form_create'),
@@ -11,5 +14,6 @@ urlpatterns = [
 	path('form_submit/<int:form_id>', views.form_submit, name='form_submit'),
 	path('form_submissions/<int:form_id>', views.form_submissions, 
 		name='form_submissions'),
-	path('confirm/', views.confirm, name='confirm')
+	path('confirm/', views.confirm, name='confirm'),
+		
 ]

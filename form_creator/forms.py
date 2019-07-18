@@ -1,4 +1,5 @@
 import json
+from django.core.serializers.json import DjangoJSONEncoder
 from django import forms
 from django.forms import ModelForm
 from django.shortcuts import redirect
@@ -10,6 +11,9 @@ from crispy_forms.layout import Layout, Field, Fieldset, Div, HTML, ButtonHolder
 from .custom_layout_object import *
 from .models import UserForm, FormField, Submissions, FieldSubmission
 from django.http import HttpResponse #TODO: delete
+import datetime
+# from phonenumber_field.formfields import PhoneNumberField
+#from phone_field import PhoneField
 
 
 class FormFieldsForm(ModelForm):
@@ -28,7 +32,7 @@ class UserFormForm(ModelForm):
 
     class Meta:
         model = UserForm
-        exclude = ['submissions', 'created_by']
+        fields = ['name']
 
     def __init__(self, *args, **kwargs):
         super(UserFormForm, self).__init__(*args, **kwargs)
@@ -167,6 +171,9 @@ class SubmissionsForm(ModelForm):
 			'TX': forms.CharField(max_length=100),
 			'EML': forms.EmailField(),
 			'NUM': forms.IntegerField(),
+			'DAT': forms.DateField(widget=forms.SelectDateWidget(), initial=datetime.datetime.now())#, label='Date'),
+			# 'TEL': PhoneNumberField()
+			# 'COL': 
 		}
 		fields = FormField.objects.filter(form_id=user_form)
 		# i = 0
@@ -180,6 +187,7 @@ class SubmissionsForm(ModelForm):
 			
 			self.fields[field_name] = widgets.get(data_type)
 			self.fields[field_name].widget.label = label
+				
 			try:
 				submissions = FieldSubmission.objects.filter(
 					submission=self.instance
@@ -244,7 +252,7 @@ class SubmissionsForm(ModelForm):
 				submission=submission,
 				# corresponding to the form of clean().ret_fields
 				field_id=field[0],
-				data=json.dumps(field[1])
+				data=json.dumps(field[1], cls=DjangoJSONEncoder)
 			)
 		
 		# return submission

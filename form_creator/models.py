@@ -5,13 +5,16 @@ from django.db.models import F
 
 
 
+
 # from django.forms import ModelForm
 # from django import forms
-
 FIELD_TYPES = [
 	('TX', 'Text'),
-	('EML', 'Email'),
 	('NUM', 'Number'),
+	('DAT', 'Date'),
+	('EML', 'Email'),
+	# ('COL', 'Color'),
+	# ('TEL', 'Tel'),
 ]
 
 # class FormList(models.Model):

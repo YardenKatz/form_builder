@@ -8,23 +8,26 @@
 
 {% block content %}
 	<h2>Form Submissions Of {{ form_name }} Form </h2>
-
-	<table>
-			<tr>
-				{% for field in fields %}
-					<th> {{ field.input_name }}</th>	
-				{% endfor %}
-			</tr>
-			
-			{% for key, values in submission_fields.items %}
+	
+	{% if submissions %}
+		<table>
 				<tr>
-					{% for v in values %}
-					<td>{{ v }}</td>
+					{% for field in fields %}
+						<th> {{ field.input_name }}</th>	
 					{% endfor %}
 				</tr>
-					
-			{% endfor %}
 				
-	</table>
+				{% for key, values in submission_fields.items %}
+					<tr>
+						{% for v in values %}
+						<td>{{ v }}</td>
+						{% endfor %}
+					</tr>
+				{% endfor %}
+		</table>
+	{% else %}
+		<h5>There are no submissions yet...</h5>
+	{% endif %}
+	
 {% endblock content %}
 	
