@@ -1,4 +1,4 @@
-# wix_form_builder
+# Form Wizard
 Custom form creation and management wizard, written in Django
 
 setup:
