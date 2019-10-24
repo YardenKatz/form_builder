@@ -1,5 +1,5 @@
 # Form Wizard
-Custom form creation and management wizard, written in Django
+Custom form creation and management wizard, written in Python, Django & JavaScript.
 
 setup:
 
