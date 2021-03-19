@@ -1,6 +1,6 @@
 astroid==2.2.5
 Babel==2.7.0
-Django==2.2.13
+Django==2.2.18
 django-colorfield==0.1.15
 django-crispy-forms==1.7.2
 django-phone-field==1.7.1
